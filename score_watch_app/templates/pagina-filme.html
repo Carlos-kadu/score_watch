@@ -1,18 +1,34 @@
 <!DOCTYPE html>
+{% load static %}
 <html>
 <head>
-    <title>{{ filme.titulo }}</title>
+    {% include 'head.html' %}
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8"/>
+    <title>Score Watch - {{ filme.titulo }}</title>
 </head>
 <body>
-    <h1>{{ filme.titulo }}</h1>
-    <p>{{ filme.sinopse }}</p>
-    <p>Gênero: {{ filme.genero }}</p>
-    <p>Duração: {{ filme.duracao }}</p>
-    <p>Ano de Lançamento: {{ filme.ano_lancamento }}</p>
-    <p>Diretor: {{ filme.diretor }}</p>
-    <img src="{{ filme.imagem_capa.url }}" alt="{{ filme.titulo }}">
+    {% include 'menu.html' %}
+    <div class="bg-titulo" style="background: url({{ filme.imagem_bg.url }});">
+        <div class="bg-filtro">
+            <div class="container-filme-serie">
+                <div class="banner-titulos">
+                    <img src="{{ filme.imagem_capa.url }}" alt="{{ filme.titulo }}">
+                </div>
+                <div class="informacoes-titulos">
+                    <h1>{{ filme.titulo }}</h1>
+                    <p>{{ filme.sinopse }}</p>
+                    <p><i class="fa-solid fa-film"></i> Gênero: {{ filme.genero }}</p>
+                    <p><i class="fa-regular fa-clock"></i> Duração: {{ filme.duracao }}</p>
+                    <p><i class="fa-regular fa-calendar"></i> Ano de Lançamento: {{ filme.ano_lancamento }}</p>
+                    <p><i class="fa-solid fa-video"></i> Diretor: {{ filme.diretor }}</p>
+                </div>
+            </div>            
+        </div>
 
-    <!-- Adicione outras informações sobre o filme conforme necessário -->
+    </div>
 
+    {% include 'footer.html' %}
 </body>
 </html>

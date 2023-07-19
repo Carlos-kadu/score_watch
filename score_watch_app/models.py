@@ -12,10 +12,10 @@ class Filme(models.Model):
     diretor = models.CharField(max_length=100)
     imagem_capa = models.ImageField(upload_to='filmes/', null=True, blank=True)
     imagem_bg = models.ImageField(upload_to='filmes/', null=True, blank=True)
-    url_slug = models.SlugField(unique=True)  # Campo para armazenar o slug da URL
+    url_slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
-        self.url_slug = slugify(self.titulo)  # Definir o valor do slug antes de salvar
+        self.url_slug = slugify(self.titulo)
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -30,10 +30,10 @@ class Serie(models.Model):
     criador = models.CharField(max_length=100)
     imagem_capa = models.ImageField(upload_to='series/', null=True, blank=True)
     imagem_bg = models.ImageField(upload_to='series/', null=True, blank=True)
-    url_slug = models.SlugField(unique=True)  # Campo para armazenar o slug da URL
+    url_slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
-        self.url_slug = slugify(self.titulo)  # Definir o valor do slug antes de salvar
+        self.url_slug = slugify(self.titulo)
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -49,6 +49,7 @@ class Avaliacao(models.Model):
 
     def __str__(self):
         return f"Avaliação de {self.usuario.username} para {self.filme or self.serie}"
+
 
 class Comentario(models.Model):
     avaliacao = models.ForeignKey(Avaliacao, on_delete=models.CASCADE, related_name='comentarios')
