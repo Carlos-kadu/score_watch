@@ -1,0 +1,8 @@
+sudo systemctl start docker
+sudo systemctl status docker
+
+senhas:
+admin -> 123456
+teste1 -> T1#123456
+teste2 -> T2#123456
+teste3 -> T3#123456
