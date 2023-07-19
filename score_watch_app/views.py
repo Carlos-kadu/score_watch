@@ -2,8 +2,11 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .models import Filme, Serie
+from .models import Filme, Serie, Comentario, Avaliacao
 from django.utils.text import slugify
+from .forms import AvaliacaoForm, ComentarioForm
+from django.db.models import Avg
+
 
 def home(request):
     filmes = Filme.objects.all()  # Busca todos os filmes
@@ -83,9 +86,9 @@ def fazer_logout(request):
     logout(request)
     return redirect('home')
 
-def pagina_filme(request, url_slug):
+""" def pagina_filme(request, url_slug):
     filme = get_object_or_404(Filme, url_slug=url_slug)
-    return render(request, 'pagina-filme.html', {'filme': filme})
+    return render(request, 'pagina-filme.html', {'filme': filme}) """
 
 def pagina_serie(request, url_slug):
     serie = get_object_or_404(Serie, url_slug=url_slug)
@@ -98,4 +101,64 @@ def filmes(request):
 def series(request):
     series = Serie.objects.all()
     return render(request, 'series.html', {'series': series})
+
+
+#############################
+# Comentários e avaliações #
+#############################
+
+def pagina_filme(request, url_slug):
+    filme = get_object_or_404(Filme, url_slug=url_slug)
+    comentarios = Comentario.objects.filter(avaliacao__filme=filme)
+    
+    # Verificar se o usuário já avaliou o filme
+    user_avaliou_filme = False
+    if request.user.is_authenticated:
+        user_avaliou_filme = Avaliacao.objects.filter(filme=filme, usuario=request.user).exists()
+
+    # Calcular a média das avaliações
+    media_avaliacoes = filme.avaliacao_set.aggregate(media=Avg('classificacao'))['media']
+
+    # Inicializar o formulário de avaliação e o formulário de comentário
+    avaliacao_form = None
+    comentario_form = None
+
+    # Se o usuário estiver logado, permitir comentar e avaliar
+    if request.user.is_authenticated:
+        if not user_avaliou_filme:  # Permitir apenas uma avaliação por usuário
+            if request.method == 'POST':
+                # Processar formulário de avaliação
+                avaliacao_form = AvaliacaoForm(request.POST)
+                if avaliacao_form.is_valid():
+                    avaliacao = avaliacao_form.save(commit=False)
+                    avaliacao.usuario = request.user
+                    avaliacao.filme = filme
+                    avaliacao.save()
+                    return redirect('pagina_filme', url_slug=url_slug)
+            else:
+                avaliacao_form = AvaliacaoForm()
+
+        if request.method == 'POST':
+            # Processar formulário de comentário
+            comentario_form = ComentarioForm(request.POST)
+            if comentario_form.is_valid():
+                comentario = comentario_form.save(commit=False)
+                comentario.usuario = request.user
+                comentario.avaliacao = Avaliacao.objects.get(filme=filme, usuario=request.user)
+                comentario.save()
+                return redirect('pagina_filme', url_slug=url_slug)
+        else:
+            comentario_form = ComentarioForm()
+
+    context = {
+        'filme': filme,
+        'comentarios': comentarios,
+        'avaliacao_form': avaliacao_form,
+        'comentario_form': comentario_form,
+        'user_avaliou_filme': user_avaliou_filme,
+        'media_avaliacoes': media_avaliacoes,
+    }
+    return render(request, 'pagina-filme.html', context)
+
+
 
