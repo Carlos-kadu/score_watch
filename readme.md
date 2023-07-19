@@ -1,4 +1,4 @@
-# Projeto Final - Score Watch
+# Score Watch
 
 ## Descrição do Projeto
 
