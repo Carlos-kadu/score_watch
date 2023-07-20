@@ -6,6 +6,7 @@ from .models import Filme, Serie, Comentario, Avaliacao
 from django.utils.text import slugify
 from .forms import AvaliacaoForm, ComentarioForm
 from django.db.models import Avg
+from django.contrib import messages
 
 
 def home(request):
@@ -115,7 +116,6 @@ def pagina_filme(request, url_slug):
     if request.user.is_authenticated:
         user_avaliou_filme = Avaliacao.objects.filter(filme=filme, usuario=request.user).exists()
 
-    # Calcular a média das avaliações
     media_avaliacoes = filme.avaliacao_set.aggregate(media=Avg('classificacao'))['media']
     if media_avaliacoes is not None:
         media_avaliacoes = round(media_avaliacoes * 10, 2)
@@ -126,9 +126,8 @@ def pagina_filme(request, url_slug):
 
     # Se o usuário estiver logado, permitir comentar e avaliar
     if request.user.is_authenticated:
-        if not user_avaliou_filme:  # Permitir apenas uma avaliação por usuário
+        if not user_avaliou_filme:
             if request.method == 'POST':
-                # Processar formulário de avaliação
                 avaliacao_form = AvaliacaoForm(request.POST)
                 if avaliacao_form.is_valid():
                     avaliacao = avaliacao_form.save(commit=False)
@@ -140,7 +139,6 @@ def pagina_filme(request, url_slug):
                 avaliacao_form = AvaliacaoForm()
 
         if request.method == 'POST':
-            # Processar formulário de comentário
             comentario_form = ComentarioForm(request.POST)
             if comentario_form.is_valid():
                 comentario = comentario_form.save(commit=False)
@@ -170,7 +168,6 @@ def pagina_serie(request, url_slug):
     if request.user.is_authenticated:
         user_avaliou_serie = Avaliacao.objects.filter(serie=serie, usuario=request.user).exists()
 
-    # Calcular a média das avaliações
     media_avaliacoes = serie.avaliacao_set.aggregate(media=Avg('classificacao'))['media']
     if media_avaliacoes is not None:
         media_avaliacoes = round(media_avaliacoes * 10, 2)
@@ -183,7 +180,6 @@ def pagina_serie(request, url_slug):
     if request.user.is_authenticated:
         if not user_avaliou_serie:  # Permitir apenas uma avaliação por usuário
             if request.method == 'POST':
-                # Processar formulário de avaliação
                 avaliacao_form = AvaliacaoForm(request.POST)
                 if avaliacao_form.is_valid():
                     avaliacao = avaliacao_form.save(commit=False)
@@ -195,7 +191,6 @@ def pagina_serie(request, url_slug):
                 avaliacao_form = AvaliacaoForm()
 
         if request.method == 'POST':
-            # Processar formulário de comentário
             comentario_form = ComentarioForm(request.POST)
             if comentario_form.is_valid():
                 comentario = comentario_form.save(commit=False)
@@ -215,5 +210,47 @@ def pagina_serie(request, url_slug):
         'media_avaliacoes': media_avaliacoes,
     }
     return render(request, 'pagina-serie.html', context)
+
+@login_required
+def editar_comentario(request, tipo, url_slug, comentario_id):
+    if tipo == 'filme':
+        model_class = Filme
+    elif tipo == 'serie':
+        model_class = Serie
+    else:
+        return redirect('pagina_inicial')  # Redirecionar para página inicial ou exibir erro
+    pagina_tipo = 'pagina_'+tipo
+
+    comentario = get_object_or_404(Comentario, id=comentario_id)
+    if request.user == comentario.usuario:
+        if request.method == 'POST':
+            comentario_form = ComentarioForm(request.POST, instance=comentario)
+            if comentario_form.is_valid():
+                comentario_form.save()
+                messages.success(request, 'Comentário atualizado com sucesso!')
+            return redirect(pagina_tipo, url_slug=url_slug)
+        else:
+            comentario_form = ComentarioForm(instance=comentario)
+        return render(request, 'editar-comentario.html', {'comentario_form': comentario_form})
+    else:
+        messages.error(request, 'Você não tem permissão para editar este comentário.')
+        return redirect(pagina_tipo, url_slug=url_slug)
+
+@login_required
+def excluir_comentario(request, tipo, url_slug, comentario_id):
+    if tipo == 'filme':
+        model_class = Filme
+    elif tipo == 'serie':
+        model_class = Serie
+    else:
+        return redirect('pagina_inicial')  # Redirecionar para página inicial ou exibir erro
+    pagina_tipo = 'pagina_'+tipo
+
+    comentario = get_object_or_404(Comentario, id=comentario_id)
+    if request.method == 'POST':
+        comentario.delete()
+        return redirect(pagina_tipo, url_slug=url_slug)
+    else:
+        return render(request, 'excluir-comentario.html', {'comentario_texto': comentario.texto, 'tipo': tipo, 'url_slug': url_slug})
 
 

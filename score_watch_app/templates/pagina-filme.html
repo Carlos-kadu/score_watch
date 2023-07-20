@@ -28,61 +28,67 @@
         </div>
     </div>  
     <div class="comentarios-e-avaliacoes">
-            {% if user.is_authenticated %}
+        {% if user.is_authenticated %}
 
-                <!-- AVALIAÇÕES -->
-                {% if media_avaliacoes %}
-                <h2 class="topico">Média das Avaliações</h2>
-                <div class="barra-progresso">
-                    <p>Média: {{ media_avaliacoes|floatformat:'0:2' }}%</p>
-                    <div class="progresso" style="width: {{ media_avaliacoes|floatformat:'0:2' }}%;">
-                    </div>
+            <!-- AVALIAÇÕES -->
+            {% if media_avaliacoes %}
+            <h2 class="topico">Média das Avaliações</h2>
+            <div class="barra-progresso">
+                <p>Média: {{ media_avaliacoes|floatformat:'0:2' }}%</p>
+                <div class="progresso" style="width: {{ media_avaliacoes|floatformat:'0:2' }}%;">
                 </div>
-            {% else %}
-                <p class="p-aval-e-coments">Nenhuma avaliação ainda.</p>
-            {% endif %}
-
-            {% if user_avaliou_filme %}
-                <p class="p-aval-e-coments">Você já avaliou este filme.</p>
-                <!--FORM PARA COMENTÁRIOS -->
-                <h2 class="topico">Comente sobre o filme</h2>
-                <form style="padding:0px;" method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{ comentario_form.as_p }}
-                    <button class="btn-score-watch" type="submit">Comentar</button>
-                </form>
-            {% else %}
-                <!-- FORM AVALIAÇÕES -->
-                <h2 class="topico">Avalie o filme</h2>
-                <p class="p-aval-e-coments">Após avaliar a caixa de comentário será liberada.</p>
-                <form style="paddin:0px;" method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{ avaliacao_form.as_p }}
-                    <button class="btn-score-watch" type="submit">Avaliar</button>
-                </form>
-            {% endif %}
-
+            </div>
         {% else %}
-            <p class="p-aval-e-coments">Faça login para avaliar e comentar.</p>
+            <p class="p-aval-e-coments">Nenhuma avaliação ainda.</p>
         {% endif %}
 
-        <!--COMENTÁRIOS -->
-        {% if comentarios %}
-            <h2 class="topico">Comentários</h2>
-            <ul class="comentarios-list">
-                {% for comentario in comentarios %}
-                    <li class="comentario-item">
-                        <div class="comentario-info">
-                            <strong>{{ comentario.usuario }}</strong>
-                            <span class="data">{{ comentario.data }}</span>
-                        </div>
-                        <p class="texto">{{ comentario.texto }}</p>
-                    </li>
-                {% endfor %}
-            </ul>
+        {% if user_avaliou_filme %}
+            <p class="p-aval-e-coments">Você já avaliou este filme.</p>
+            <!-- FORM PARA COMENTÁRIOS -->
+            <h2 class="topico">Comente sobre o filme</h2>
+            <form style="padding:0px;" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ comentario_form.as_p }}
+                <button class="btn-score-watch" type="submit">Comentar</button>
+            </form>
         {% else %}
-            <p class="p-aval-e-coments">Nenhum comentário ainda.</p>
+            <!-- FORM AVALIAÇÕES -->
+            <h2 class="topico">Avalie o filme</h2>
+            <p class="p-aval-e-coments">Após avaliar a caixa de comentário será liberada.</p>
+            <form style="paddin:0px;" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ avaliacao_form.as_p }}
+                <button class="btn-score-watch" type="submit">Avaliar</button>
+            </form>
         {% endif %}
+
+    {% else %}
+        <p class="p-aval-e-coments">Faça login para avaliar e comentar.</p>
+    {% endif %}
+
+    <!-- COMENTÁRIOS -->
+    {% if comentarios %}
+        <h2 class="topico">Comentários</h2>
+        <ul class="comentarios-list">
+            {% for comentario in comentarios %}
+                <li class="comentario-item">
+                    <div class="comentario-info">
+                        <strong>
+                            {{ comentario.usuario }}
+                            {% if user == comentario.usuario %}
+                                <a href="{% url 'editar_comentario' tipo='filme' url_slug=filme.url_slug comentario_id=comentario.id %}" class="btn-editar-comentario">Editar</a>
+                                <a href="{% url 'excluir_comentario' tipo='filme' url_slug=filme.url_slug comentario_id=comentario.id %}" class="btn-excluir-comentario" data-comentario-texto="{{ comentario.texto }}">Excluir</a>
+                            {% endif %}
+                        </strong>
+                        <span class="data">{{ comentario.data }}</span>
+                    </div>
+                    <p class="texto">{{ comentario.texto }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="p-aval-e-coments">Nenhum comentário ainda.</p>
+    {% endif %}
     </div>
 
     {% include 'footer.html' %}

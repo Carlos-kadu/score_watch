@@ -66,23 +66,29 @@
             <p class="p-aval-e-coments">Faça login para avaliar e comentar.</p>
         {% endif %}
 
-        <!--COMENTÁRIOS -->
-        {% if comentarios %}
-            <h2 class="topico">Comentários</h2>
-            <ul class="comentarios-list">
-                {% for comentario in comentarios %}
-                    <li class="comentario-item">
-                        <div class="comentario-info">
-                            <strong>{{ comentario.usuario }}</strong>
-                            <span class="data">{{ comentario.data }}</span>
-                        </div>
-                        <p class="texto">{{ comentario.texto }}</p>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p class="p-aval-e-coments">Nenhum comentário ainda.</p>
-        {% endif %}
+    <!-- COMENTÁRIOS -->
+    {% if comentarios %}
+        <h2 class="topico">Comentários</h2>
+        <ul class="comentarios-list">
+            {% for comentario in comentarios %}
+                <li class="comentario-item">
+                    <div class="comentario-info">
+                        <strong>
+                            {{ comentario.usuario }}
+                            {% if user == comentario.usuario %}
+                                <a href="{% url 'editar_comentario' url_slug=serie.url_slug comentario_id=comentario.id %}" class="btn-editar-comentario">Editar</a>
+                                <a href="{% url 'excluir_comentario' url_slug=serie.url_slug comentario_id=comentario.id %}" class="btn-excluir-comentario" data-comentario-texto="{{ comentario.texto }}">Excluir</a>
+                            {% endif %}
+                        </strong>
+                        <span class="data">{{ comentario.data }}</span>
+                    </div>
+                    <p class="texto">{{ comentario.texto }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="p-aval-e-coments">Nenhum comentário ainda.</p>
+    {% endif %}
     </div>
 
     {% include 'footer.html' %}
