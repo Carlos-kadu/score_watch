@@ -7,6 +7,16 @@
 body {
     background: linear-gradient(45deg, #000000 10%, #0a1852 60%, #000000 90%, #0a1852 100%);
     font-family: "Poppins";
+    color: #fff;
+}
+
+p {
+    color: #ffffff;
+    font-family: "Poppins";
+}
+
+.errorlist {
+    color: #ffffff!important;
 }
 
 
@@ -17,7 +27,6 @@ body {
 }
 
 .navbar-dark {
-    /* background-image: linear-gradient(rgba(0, 0, 0, 0.5) 0.48%, rgba(0, 0, 0, 0.47) 3.73%, rgba(0, 0, 0, 0.443) 6.67%, rgba(0, 0, 0, 0.424) 9.29%, rgba(0, 0, 0, 0.404) 11.98%, rgba(0, 0, 0, 0.384) 14.88%, rgba(0, 0, 0, 0.37) 18.18%, rgba(0, 0, 0, 0.34) 25%, rgba(0, 0, 0, 0.32) 32.4%, rgba(0, 0, 0, 0.28) 39.23%, rgba(0, 0, 0, 0.24) 47.42%, rgba(0, 0, 0, 0.2) 57.17%, rgba(0, 0, 0, 0.12) 68.67%, rgba(0, 0, 0, 0.06) 82.12%, rgba(0, 0, 0, 0) 97.71%); */
     background: rgba(0, 0, 0, .8);
     backdrop-filter: blur(5px);
     position: fixed;
@@ -35,7 +44,8 @@ body {
 
 .dropdown-menu {
     /* box-shadow: 0px 0px 3px 1px #111; */
-    background-color: #0a1852!important;
+    background-color: rgba(0, 0, 0, .9)!important;
+    backdrop-filter: blur(1px);
 }
 
 .dropdown-item {
@@ -206,6 +216,7 @@ form button:hover {
 .container-titulos:hover .image {
     transform: scale(1.05);
     transition: .4s;
+    border: 2px solid #22abfa;
 }
 
 .overlay {
@@ -232,7 +243,6 @@ form button:hover {
 }
 
 .image {
-    border: 2px solid #22abfa;
     border-radius: 10px;
     width: 180px;
     height: auto;
@@ -309,9 +319,8 @@ form button:hover {
 }
 
 .banner-titulos img {
-    border: 2px solid #22abfa;
     border-radius: 10px;
-    width: 230px;
+    width: 250px;
     height: auto;
     box-sizing: border-box;
 }
@@ -327,11 +336,12 @@ form button:hover {
     background-size: cover!important;
     background-repeat: no-repeat!important;
     background-position: center!important;
+    /*     background-attachment: fixed!important; */
 }
 
 .bg-filtro {
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(5px);
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(3px);
     padding: 4%;
 }
 
@@ -344,4 +354,139 @@ form button:hover {
         padding-left: 0;
         padding-top: 20px;
     }
+}
+
+
+/*COMENTÁRIOS E AVALIAÇÕES*/
+
+.comentarios-list {
+    list-style: none;
+    padding: 0;
+}
+
+.comentario-item {
+    box-shadow: 5px 5px #22abfa;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    width: 80%;
+    margin: 10px auto;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    color: #000000;
+}
+
+.comentario-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.data {
+    color: #777;
+    font-size: 14px;
+}
+
+.texto {
+    font-size: 16px;
+    line-height: 1.4;
+    color: #000000;
+}
+
+.topico {
+    color: #fff;
+    font-family: "Poppins"!important;
+    text-align: center;
+}
+
+#id_classificacao {
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    display: block;
+}
+
+#id_texto {
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    display: block;
+    height: 100px;
+    box-shadow: 5px 5px #22abfa;
+    width: 70%;
+    margin: auto;
+}
+
+.btn-score-watch {
+    background: #22abfa;
+    width: 150px;
+    margin: 10px;
+}
+
+.barra-progresso {
+    border: 1px solid #fff;
+    width: 50%;
+    height: 25px;
+    background-color: #0A1852;
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+    margin: auto;
+}
+
+.progresso {
+    height: 100%;
+    background-color: #22abfa;
+    transition: width 0.3s ease;
+}
+
+.barra-progresso p {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.p-aval-e-coments {
+    text-align: center;
+    color: #ffffff;
+    font-family: "Poppins"!important;
+}
+
+.comentarios-e-avaliacoes {
+    padding: 4%;
+    background: linear-gradient(45deg, #000000 30%, #0a1852 60%, #000000 90%, #0a1852 100%);
+}
+
+.overlay-pag-titulos {
+    position: relative;
+}
+
+.overlay-pag-titulos::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient( ellipse at center, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.7) 100%);
+}
+
+.overlay-pag-titulos::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 100%);
 }

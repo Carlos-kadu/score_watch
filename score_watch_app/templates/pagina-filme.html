@@ -10,7 +10,7 @@
 </head>
 <body>
     {% include 'menu.html' %}
-    <div class="bg-titulo" style="background: url({{ filme.imagem_bg.url }});">
+    <div class="bg-titulo overlay-pag-titulos" style="background: url({{ filme.imagem_bg.url }});">
         <div class="bg-filtro">
             <div class="container-filme-serie">
                 <div class="banner-titulos">
@@ -24,55 +24,68 @@
                     <p><i class="fa-regular fa-calendar"></i> Ano de Lançamento: {{ filme.ano_lancamento }}</p>
                     <p><i class="fa-solid fa-video"></i> Diretor: {{ filme.diretor }}</p>
                 </div>
-            </div>            
+            </div>
         </div>
-    </div>
+    </div>  
+    <div class="comentarios-e-avaliacoes">
+            {% if user.is_authenticated %}
 
-    {% if user.is_authenticated %}
-        {% if user_avaliou_filme %}
-            <p>Você já avaliou este filme.</p>
+                <!-- AVALIAÇÕES -->
+                {% if media_avaliacoes %}
+                <h2 class="topico">Média das Avaliações</h2>
+                <div class="barra-progresso">
+                    <p>Média: {{ media_avaliacoes|floatformat:'0:2' }}%</p>
+                    <div class="progresso" style="width: {{ media_avaliacoes|floatformat:'0:2' }}%;">
+                    </div>
+                </div>
+            {% else %}
+                <p class="p-aval-e-coments">Nenhuma avaliação ainda.</p>
+            {% endif %}
+
+            {% if user_avaliou_filme %}
+                <p class="p-aval-e-coments">Você já avaliou este filme.</p>
+                <!--FORM PARA COMENTÁRIOS -->
+                <h2 class="topico">Comente sobre o filme</h2>
+                <form style="padding:0px;" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ comentario_form.as_p }}
+                    <button class="btn-score-watch" type="submit">Comentar</button>
+                </form>
+            {% else %}
+                <!-- FORM AVALIAÇÕES -->
+                <h2 class="topico">Avalie o filme</h2>
+                <p class="p-aval-e-coments">Após avaliar a caixa de comentário será liberada.</p>
+                <form style="paddin:0px;" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ avaliacao_form.as_p }}
+                    <button class="btn-score-watch" type="submit">Avaliar</button>
+                </form>
+            {% endif %}
+
         {% else %}
-            <h2>Avalie o filme</h2>
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ avaliacao_form.as_p }}
-                <button type="submit">Avaliar</button>
-            </form>
+            <p class="p-aval-e-coments">Faça login para avaliar e comentar.</p>
         {% endif %}
 
-        <h2>Comente sobre o filme</h2>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ comentario_form.as_p }}
-            <button type="submit">Comentar</button>
-        </form>
-    {% else %}
-        <p>Faça login para avaliar e comentar.</p>
-    {% endif %}
-
-
-    {% if comentarios %}
-        <h2>Comentários</h2>
-        <ul>
-            {% for comentario in comentarios %}
-                <li>
-                    <strong>{{ comentario.usuario }}</strong>
-                    <p>{{ comentario.texto }}</p>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>Nenhum comentário ainda.</p>
-    {% endif %}
-
-    {% if media_avaliacoes %}
-    <h2>Média das Avaliações</h2>
-    <p>Média: {{ media_avaliacoes|floatformat:1 }}</p>
-{% else %}
-    <p>Nenhuma avaliação ainda.</p>
-{% endif %}
-
+        <!--COMENTÁRIOS -->
+        {% if comentarios %}
+            <h2 class="topico">Comentários</h2>
+            <ul class="comentarios-list">
+                {% for comentario in comentarios %}
+                    <li class="comentario-item">
+                        <div class="comentario-info">
+                            <strong>{{ comentario.usuario }}</strong>
+                            <span class="data">{{ comentario.data }}</span>
+                        </div>
+                        <p class="texto">{{ comentario.texto }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="p-aval-e-coments">Nenhum comentário ainda.</p>
+        {% endif %}
+    </div>
 
     {% include 'footer.html' %}
+
 </body>
 </html>

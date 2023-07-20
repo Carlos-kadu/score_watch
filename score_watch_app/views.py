@@ -9,8 +9,8 @@ from django.db.models import Avg
 
 
 def home(request):
-    filmes = Filme.objects.all()  # Busca todos os filmes
-    series = Serie.objects.all()  # Busca todas as séries
+    filmes = Filme.objects.all()
+    series = Serie.objects.all()
 
     return render(request, 'index.html', {'filmes': filmes, 'series': series})
 
@@ -24,7 +24,7 @@ def cadastro(request):
             user.first_name = request.POST['first_name']
             user.last_name = request.POST['last_name']
             user.save()
-            return redirect('login')  # Redireciona para a página de login após o registro
+            return redirect('login')
         except Exception as e:
             return render(request, 'cadastro.html', {'erro': str(e)})
     else:
@@ -72,13 +72,12 @@ def editar_perfil(request):
         user.username = username
         user.email = email
 
-        # Verificar se a senha foi fornecida no formulário e atualizá-la corretamente
         password = request.POST.get('password', '')
         if password:
             user.set_password(password)
 
         user.save()
-        return redirect('perfil')  # Redireciona para a página de perfil após a edição
+        return redirect('perfil')
 
     return render(request, 'editar-perfil.html', {'user': user})
 
@@ -90,9 +89,9 @@ def fazer_logout(request):
     filme = get_object_or_404(Filme, url_slug=url_slug)
     return render(request, 'pagina-filme.html', {'filme': filme}) """
 
-def pagina_serie(request, url_slug):
+""" def pagina_serie(request, url_slug):
     serie = get_object_or_404(Serie, url_slug=url_slug)
-    return render(request, 'pagina-serie.html', {'serie': serie})
+    return render(request, 'pagina-serie.html', {'serie': serie}) """
 
 def filmes(request):
     filmes = Filme.objects.all()
@@ -118,6 +117,8 @@ def pagina_filme(request, url_slug):
 
     # Calcular a média das avaliações
     media_avaliacoes = filme.avaliacao_set.aggregate(media=Avg('classificacao'))['media']
+    if media_avaliacoes is not None:
+        media_avaliacoes = round(media_avaliacoes * 10, 2)
 
     # Inicializar o formulário de avaliação e o formulário de comentário
     avaliacao_form = None
@@ -160,5 +161,59 @@ def pagina_filme(request, url_slug):
     }
     return render(request, 'pagina-filme.html', context)
 
+def pagina_serie(request, url_slug):
+    serie = get_object_or_404(Serie, url_slug=url_slug)
+    comentarios = Comentario.objects.filter(avaliacao__serie=serie)
+    
+    # Verificar se o usuário já avaliou a série
+    user_avaliou_serie = False
+    if request.user.is_authenticated:
+        user_avaliou_serie = Avaliacao.objects.filter(serie=serie, usuario=request.user).exists()
+
+    # Calcular a média das avaliações
+    media_avaliacoes = serie.avaliacao_set.aggregate(media=Avg('classificacao'))['media']
+    if media_avaliacoes is not None:
+        media_avaliacoes = round(media_avaliacoes * 10, 2)
+
+    # Inicializar o formulário de avaliação e o formulário de comentário
+    avaliacao_form = None
+    comentario_form = None
+
+    # Se o usuário estiver logado, permitir comentar e avaliar
+    if request.user.is_authenticated:
+        if not user_avaliou_serie:  # Permitir apenas uma avaliação por usuário
+            if request.method == 'POST':
+                # Processar formulário de avaliação
+                avaliacao_form = AvaliacaoForm(request.POST)
+                if avaliacao_form.is_valid():
+                    avaliacao = avaliacao_form.save(commit=False)
+                    avaliacao.usuario = request.user
+                    avaliacao.serie = serie
+                    avaliacao.save()
+                    return redirect('pagina_serie', url_slug=url_slug)
+            else:
+                avaliacao_form = AvaliacaoForm()
+
+        if request.method == 'POST':
+            # Processar formulário de comentário
+            comentario_form = ComentarioForm(request.POST)
+            if comentario_form.is_valid():
+                comentario = comentario_form.save(commit=False)
+                comentario.usuario = request.user
+                comentario.avaliacao = Avaliacao.objects.get(serie=serie, usuario=request.user)
+                comentario.save()
+                return redirect('pagina_serie', url_slug=url_slug)
+        else:
+            comentario_form = ComentarioForm()
+
+    context = {
+        'serie': serie,
+        'comentarios': comentarios,
+        'avaliacao_form': avaliacao_form,
+        'comentario_form': comentario_form,
+        'user_avaliou_serie': user_avaliou_serie,
+        'media_avaliacoes': media_avaliacoes,
+    }
+    return render(request, 'pagina-serie.html', context)
 
 
