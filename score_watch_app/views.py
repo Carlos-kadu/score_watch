@@ -47,15 +47,20 @@ def realizar_login(request):
         erro = None
         return render(request, 'login.html', {'erro': erro})
     
-@login_required    
-def perfil(request):
-    user = request.user
+from django.contrib.auth.decorators import login_required
+from .models import Comentario
 
-    username = user.username
-    email = user.email
-    nome_completo = user.get_full_name()
-    
-    return render(request, 'perfil.html', {'username': username, 'email': email, 'nome_completo': nome_completo})
+@login_required
+def perfil(request):
+    comentarios_recentes = Comentario.objects.filter(usuario=request.user).order_by('-data_comentario')[:5]
+    context = {
+        'username': request.user.username,
+        'email': request.user.email,
+        'nome_completo': request.user.get_full_name(),
+        'comentarios_recentes': comentarios_recentes,
+    }
+    return render(request, 'perfil.html', context)
+
 
 @login_required
 def editar_perfil(request):
@@ -85,14 +90,6 @@ def editar_perfil(request):
 def fazer_logout(request):
     logout(request)
     return redirect('home')
-
-""" def pagina_filme(request, url_slug):
-    filme = get_object_or_404(Filme, url_slug=url_slug)
-    return render(request, 'pagina-filme.html', {'filme': filme}) """
-
-""" def pagina_serie(request, url_slug):
-    serie = get_object_or_404(Serie, url_slug=url_slug)
-    return render(request, 'pagina-serie.html', {'serie': serie}) """
 
 def filmes(request):
     filmes = Filme.objects.all()
@@ -218,7 +215,7 @@ def editar_comentario(request, tipo, url_slug, comentario_id):
     elif tipo == 'serie':
         model_class = Serie
     else:
-        return redirect('pagina_inicial')  # Redirecionar para página inicial ou exibir erro
+        return redirect('pagina_inicial')
     pagina_tipo = 'pagina_'+tipo
 
     comentario = get_object_or_404(Comentario, id=comentario_id)
@@ -243,7 +240,7 @@ def excluir_comentario(request, tipo, url_slug, comentario_id):
     elif tipo == 'serie':
         model_class = Serie
     else:
-        return redirect('pagina_inicial')  # Redirecionar para página inicial ou exibir erro
+        return redirect('pagina_inicial')
     pagina_tipo = 'pagina_'+tipo
 
     comentario = get_object_or_404(Comentario, id=comentario_id)

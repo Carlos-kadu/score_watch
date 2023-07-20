@@ -20,13 +20,40 @@
                 <a href="{% url 'editar-perfil' %}"><p class="perfil-p">Editar perfil</p></a>
             </div>
         </div>
-        <div class="painel" style="text-align: left; height:200px">
-            <div class="painel-header">Últimas resenhas</div>
-            <div class="painel-body">
-                <p><strong>A qualquer momento</p>
-            </div>
-        </div>
     </div>
+    <div style="display: block; margin-top: 30px;"><h1 class="topico">Seus comentários</h1></div>
+    <div>
+        {% if comentarios_recentes %}
+            <ul class="comentarios-list">
+                {% for comentario in comentarios_recentes %}
+                    <li class="comentario-item">
+                        <div class="comentario-info">
+                            <strong>
+                                {{ comentario.usuario }}
+                            </strong>
+                            <span class="data">{{ comentario.data_comentario }}</span>
+                        </div>
+                        <p class="texto">{{ comentario.texto }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+
+
+            
+
+
+
+
+
+
+
+
+        {% else %}
+            <p>Nenhum comentário encontrado.</p>
+        {% endif %}
+    </div>
+
+    
 
 
     {% include 'footer.html' %}

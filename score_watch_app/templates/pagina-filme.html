@@ -76,11 +76,11 @@
                         <strong>
                             {{ comentario.usuario }}
                             {% if user == comentario.usuario %}
-                                <a href="{% url 'editar_comentario' tipo='filme' url_slug=filme.url_slug comentario_id=comentario.id %}" class="btn-editar-comentario">Editar</a>
-                                <a href="{% url 'excluir_comentario' tipo='filme' url_slug=filme.url_slug comentario_id=comentario.id %}" class="btn-excluir-comentario" data-comentario-texto="{{ comentario.texto }}">Excluir</a>
+                                <a style="margin-left:5px" href="{% url 'editar_comentario' tipo='filme' url_slug=filme.url_slug comentario_id=comentario.id %}" class="btn-editar-comentario"><i class="fas fa-edit"></i></a>
+                                <a style="margin-left:5px" href="{% url 'excluir_comentario' tipo='filme' url_slug=filme.url_slug comentario_id=comentario.id %}" class="btn-excluir-comentario" data-comentario-texto="{{ comentario.texto }}"><i class="fa-solid fa-trash"></i></a>
                             {% endif %}
                         </strong>
-                        <span class="data">{{ comentario.data }}</span>
+                        <span class="data">{{ comentario.data_comentario }}</span>
                     </div>
                     <p class="texto">{{ comentario.texto }}</p>
                 </li>
