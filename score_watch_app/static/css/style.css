@@ -346,6 +346,15 @@ form button:hover {
 }
 
 @media screen and (max-width: 600px) {
+    .image {
+        width: 130px;
+    }
+    .img-carrossel {
+        width: 100%!important;
+        box-shadow: none;
+        margin: 0;
+        border-radius: 0px!important;
+    }
     .container-filme-serie {
         flex-direction: column;
         align-items: flex-start;

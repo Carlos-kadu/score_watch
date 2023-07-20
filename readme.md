@@ -32,3 +32,11 @@ O projeto foi desenvolvido utilizando as seguintes tecnologias:
 - Django (framework web)
 - SQLite (banco de dados)
 - HTML, CSS e JavaScript (front-end)
+
+## Usuários cadastrados
+
+| Usuário             | Senha       |
+|---------------------|-------------|
+| admin               | 123456      |
+| luccaassis          | lucca123    |
+| carla.marina1958    | carla123    |

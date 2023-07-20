@@ -160,7 +160,6 @@ def pagina_serie(request, url_slug):
     serie = get_object_or_404(Serie, url_slug=url_slug)
     comentarios = Comentario.objects.filter(avaliacao__serie=serie)
     
-    # Verificar se o usuário já avaliou a série
     user_avaliou_serie = False
     if request.user.is_authenticated:
         user_avaliou_serie = Avaliacao.objects.filter(serie=serie, usuario=request.user).exists()
@@ -169,13 +168,11 @@ def pagina_serie(request, url_slug):
     if media_avaliacoes is not None:
         media_avaliacoes = round(media_avaliacoes * 10, 2)
 
-    # Inicializar o formulário de avaliação e o formulário de comentário
     avaliacao_form = None
     comentario_form = None
 
-    # Se o usuário estiver logado, permitir comentar e avaliar
     if request.user.is_authenticated:
-        if not user_avaliou_serie:  # Permitir apenas uma avaliação por usuário
+        if not user_avaliou_serie:
             if request.method == 'POST':
                 avaliacao_form = AvaliacaoForm(request.POST)
                 if avaliacao_form.is_valid():
