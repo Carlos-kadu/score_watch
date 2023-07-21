@@ -14,7 +14,7 @@
     {% block content %}
         <h2 class="topico" style="margin-top: 7%">Excluir Comentário</h2>
         <p style="text-align: center">Deseja realmente excluir o seguinte comentário?</p>
-        <p style="text-align: center">{{ comentario_texto }}</p>
+        <p style="text-align: center; margin: 0% 10%">{{ comentario_texto }}</p>
         <form method="post" style="margin-bottom:7%;">
         {% csrf_token %}
         <button class="btn-score-watch" type="submit">Sim, Excluir</button>
