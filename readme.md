@@ -4,6 +4,8 @@
 
 Este é o projeto final da disciplina de Orientação a Objetos da Universidade de Brasília (UnB). O Score Watch é um sistema de avaliação de filmes e séries. Os usuários podem se cadastrar, avaliar filmes e séries, e deixar suas críticas e comentários.
 
+![captura](/score_watch_app/static/imgs/captura-home.jpeg)
+
 ## Funcionalidades
 
 O projeto possui as seguintes funcionalidades:

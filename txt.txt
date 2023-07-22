@@ -1,7 +1,0 @@
-sudo systemctl start docker
-sudo systemctl status docker
-
-senhas:
-admin -> 123456
-luccaassis -> lucca123
-carla.marina1958 -> carla123
