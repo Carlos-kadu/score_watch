@@ -1,12 +1,12 @@
-# Score Watch
+# 🎥 Score Watch
 
-## Descrição do Projeto
+## 📋 Descrição do Projeto
 
 O Score Watch é um sistema de avaliação de filmes e séries. Os usuários podem se cadastrar, avaliar filmes e séries, e deixar suas críticas e comentários.
 
 ![captura](/score_watch_app/static/imgs/captura-home.jpeg)
 
-## Funcionalidades
+## 🔧 Funcionalidades
 
 O projeto possui as seguintes funcionalidades:
 
@@ -26,7 +26,7 @@ O projeto possui as seguintes funcionalidades:
 
 - Detalhes do filme/série: Os usuários podem visualizar os detalhes de um filme ou série, incluindo título, sinopse, elenco, diretor e outras informações.
 
-## Tecnologias Utilizadas
+## 🖥️ Tecnologias Utilizadas
 
 O projeto foi desenvolvido utilizando as seguintes tecnologias:
 
@@ -35,7 +35,7 @@ O projeto foi desenvolvido utilizando as seguintes tecnologias:
 - SQLite (banco de dados)
 - HTML, CSS e JavaScript (front-end)
 
-## Usuários cadastrados
+## 👥 Usuários cadastrados
 
 | Usuário             | Senha       |
 |---------------------|-------------|
